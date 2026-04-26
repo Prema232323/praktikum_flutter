@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/models/profile.dart';
+import '../models/profile.dart';
 
 class EditProfile extends StatefulWidget {
-  const EditProfile({super.key, required this.profile});
-
   final Profile profile;
+  const EditProfile({super.key, required this.profile});
 
   @override
   State<EditProfile> createState() => _EditProfileState();
@@ -14,28 +13,29 @@ class _EditProfileState extends State<EditProfile> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _nameController;
   late TextEditingController _bioController;
-  late TextEditingController _phoneController;
+  late TextEditingController _descController;
 
   @override
   void initState() {
     super.initState();
+
     _nameController = TextEditingController(text: widget.profile.name);
     _bioController = TextEditingController(text: widget.profile.bio);
-    _phoneController = TextEditingController(text: widget.profile.phone);
+    _descController = TextEditingController(text: widget.profile.desc56);
   }
 
   @override
   void dispose() {
     _nameController.dispose();
     _bioController.dispose();
-    _phoneController.dispose();
+    _descController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Edit Profile')),
+      appBar: AppBar(title: const Text("Edit Profile")),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -44,28 +44,33 @@ class _EditProfileState extends State<EditProfile> {
             children: [
               TextFormField(
                 controller: _nameController,
-                decoration: InputDecoration(labelText: 'Nama'),
+                decoration: const InputDecoration(labelText: "Nama", border: OutlineInputBorder()),
               ),
+              const SizedBox(height: 16),
               TextFormField(
                 controller: _bioController,
-                decoration: InputDecoration(labelText: 'Bio'),
+                decoration: const InputDecoration(labelText: "Bio", border: OutlineInputBorder()),
               ),
+              const SizedBox(height: 16),
               TextFormField(
-                controller: _phoneController,
-                decoration: InputDecoration(labelText: 'Phone'),
+                controller: _descController,
+                decoration: const InputDecoration(labelText: "Desc", border: OutlineInputBorder()),
               ),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    final updatedProfile = Profile(
-                      name: _nameController.text,
-                      bio: _bioController.text,
-                      phone: _phoneController.text,
-                      id: widget.profile.id,
-                    );
-                    Navigator.pop(context, updatedProfile);
-                  }
-                }, child: Text('Simpan')),
+
+                  Profile updatedData = Profile(
+                    id: widget.profile.id,
+                    name: _nameController.text,
+                    bio: _bioController.text,
+                    desc56: _descController.text,
+                  );
+                  Navigator.pop(context, updatedData);
+                },
+
+                child: const Text("Update Data"),
+              ),
             ],
           ),
         ),

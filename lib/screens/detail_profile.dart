@@ -1,24 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_application_1/models/profile.dart';
-import 'package:flutter_application_1/screens/edit_profile.dart';
+import 'package:flutter_application_1/screens/edit_profile.dart'; 
 
 class DetailProfile extends StatefulWidget {
-  const DetailProfile({super.key, required this.profile});
-
   final Profile profile;
+  const DetailProfile({super.key, required this.profile});
 
   @override
   State<DetailProfile> createState() => _DetailProfileState();
 }
 
 class _DetailProfileState extends State<DetailProfile> {
+
+  void _navigateToEdit() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditProfile(profile: widget.profile),
+      ),
+    );
+
+    if (result != null && result is Profile) {
+      setState(() {
+        widget.profile.name = result.name;
+        widget.profile.bio = result.bio;
+        widget.profile.desc56 = result.desc56;
+      });
+      Fluttertoast.showToast(msg: "Data berhasil diperbarui!");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Detail Profile'),
-        backgroundColor: Color.fromARGB(255, 156, 3, 3),
+        backgroundColor: const Color.fromARGB(255, 216, 220, 168),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -30,6 +48,7 @@ class _DetailProfileState extends State<DetailProfile> {
                 children: [
                   Container(
                     height: 200,
+                    width: double.infinity,
                     decoration: const BoxDecoration(
                       image: DecorationImage(
                         image: AssetImage('assets/images/background2.jpg'),
@@ -42,69 +61,31 @@ class _DetailProfileState extends State<DetailProfile> {
                     child: CircleAvatar(
                       radius: 80,
                       backgroundImage: NetworkImage(
-                        'https://i.pinimg.com/736x/0d/7c/65/0d7c651b6d35482fa451b383fe1ece98.jpg',
+                        'https://i.pinimg.com/736x/04/ee/ac/04eeac57d0650c2cf314fc433ffdb226.jpg',
                       ),
-                    ),
+                ),
                   ),
                 ],
               ),
             ),
             Text(
               widget.profile.name,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               widget.profile.bio,
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 18, color: Colors.grey[600]),
             ),
-            SizedBox(height: 8),
             Text(
-              "Phone Number : ${widget.profile.phone}",
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-            ),
-
-            SizedBox(height: 8),
-
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
-              child: Text(
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-                textAlign: TextAlign.justify,
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Fluttertoast.showToast(msg: "Button ini belum memiliki fungsi");
-              },
-              child: Text("Klik Saya"),
+              widget.profile.desc56,
+              style: TextStyle(fontSize: 18, color: Colors.grey[600]),
             ),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text("Go Back"),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                final Profile? updatedProfile = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => EditProfile(profile: widget.profile),
-                  ),
-                );
-
-                if (updatedProfile != null) {
-                  setState(() {
-                    widget.profile.name = updatedProfile.name;
-                    widget.profile.bio = updatedProfile.bio;
-                    widget.profile.phone = updatedProfile.phone;
-                  });
-                  Fluttertoast.showToast(msg: "Profile berhasil diperbarui");
-                }
-              },
-              child: const Text("Edit Profile"),
+            ElevatedButton.icon(
+              onPressed: _navigateToEdit,
+              icon: const Icon(Icons.edit),
+              label: const Text("Edit Profile"),
             ),
             const SizedBox(height: 50),
           ],

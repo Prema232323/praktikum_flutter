@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_application_1/models/profile.dart';
 import 'package:flutter_application_1/screens/detail_profile.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class ListProfile extends StatefulWidget {
   const ListProfile({super.key});
@@ -18,16 +18,16 @@ class _ListProfileState extends State<ListProfile> {
       int lastIndex = profiles.length;
       profiles.add(
         Profile(
-          id: lastIndex + 4,
-          name: "Prema ${lastIndex + 4}",
-          bio: "Web Developer",
-          phone: "087866154600",
+          id: lastIndex + 1,
+          name: "Depakanh ${lastIndex + 1}",
+          bio: "Mahasiswa",
+          desc56: "Beat to be the best",
         ),
       );
     });
   }
 
-  void deleteitem(int index) {
+  void deleteItem(int index) {
     setState(() {
       profiles.removeAt(index);
     });
@@ -36,36 +36,32 @@ class _ListProfileState extends State<ListProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('List Profile')),
+      appBar: AppBar(title: const Text('List Profile')),
+
       body: ListView.builder(
         itemCount: profiles.length,
         itemBuilder: (context, index) {
           final profile = profiles[index];
+
           return Dismissible(
-            key: Key(profile.name),
+            key: Key(index.toString()),
             onDismissed: (direction) {
               final deletedItem = profiles[index];
-              deleteitem(index);
-              Fluttertoast.showToast(msg: "${deletedItem.name} dihapus");
+              deleteItem(index);
+
+              Fluttertoast.showToast(
+                msg: "Profile ${deletedItem.name} dihapus",
+              );
             },
             child: ListTile(
               leading: CircleAvatar(
                 backgroundImage: NetworkImage(
-                  'https://i.pinimg.com/1200x/55/ca/e2/55cae21af16ffd9d000d73e3c6577f5d.jpg',
+                  'https://i.pinimg.com/1200x/00/e9/d2/00e9d28ad1fd2b974c1c36ef29e487b9.jpg',
                 ),
               ),
               title: Text(profile.name),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(profile.bio),
-                  SizedBox(height: 4),
-                  Text(
-                    "Phone: ${profile.phone}",
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                ],
-              ),
+              subtitle: Text(profile.bio),
+
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -76,25 +72,10 @@ class _ListProfileState extends State<ListProfile> {
           );
         },
       ),
-      floatingActionButton: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          FloatingActionButton(
-            onPressed: () {
-              addItem();
-            },
-            child: Icon(Icons.add),
-          ),
-          SizedBox(height: 10),
-          FloatingActionButton(
-            onPressed: () {
-              if (profiles.isNotEmpty) {
-                deleteitem(profiles.length - 1);
-              }
-            },
-            child: Icon(Icons.remove),
-          ),
-        ],
+
+      floatingActionButton: FloatingActionButton(
+        onPressed: addItem,
+        child: const Icon(Icons.add),
       ),
     );
   }
